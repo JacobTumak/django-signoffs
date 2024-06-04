@@ -12,12 +12,17 @@ Once granted, the Stamp persists its "approved" status, regardless of the state 
 To revoke a Stamp, we alter the approval status and revoke the Signet(s) used to grant the Approval.
 A "blame" history, may be maintained by using a RevokeSignet model on the Approval Type.
 """
+from __future__ import annotations
+from typing import TYPE_CHECKING
 from django.core.exceptions import ImproperlyConfigured, ValidationError
 from django.db import models
 from django.utils import timezone
 from django.utils.formats import date_format
 
 from .signets import AbstractSignet
+
+if TYPE_CHECKING:
+    from signoffs.core.approvals import AbstractApproval
 
 
 class AbstractApprovalSignet(AbstractSignet):
@@ -67,7 +72,7 @@ class ApprovalStampQuerySet(models.QuerySet):
 ApprovalStampManager = models.Manager.from_queryset(ApprovalStampQuerySet)
 
 
-def validate_approval_id(value):
+def validate_approval_id(value) -> None:
     """Raise ValidationError if value is not a registered Approval Type ID"""
     from signoffs import registry
 
@@ -114,7 +119,7 @@ class AbstractApprovalStamp(models.Model):
         )
 
     @property
-    def approval_type(self):
+    def approval_type(self) -> type[AbstractApproval]:
         """Return the Approval Type (class) that governs this stamp"""
         from signoffs.registry import approvals
 
