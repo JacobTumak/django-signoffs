@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "django_signoffs"
 version = "0.3.12"
-requires-python = ">=3.8, <4.0"
+requires-python = ">=3.10, <4.0"
 description = 'A mico-framework for collecting lightweight, non-crypto "signatures" for virtually anything.'
 readme = "README.md"
 license = {file = "LICENSE"}
@@ -22,9 +22,8 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "Framework :: Django",
 ]
-# TODO: Ensure django min version is acceptable (was 3.2)
 dependencies = [
-    "django>=4.2,<5.0", # can use 3.2 if switch tests to use depr "assertQuerysetEqual" rather than assertQuerySetEqual
+    "django>=5.2,<6.0",
     "persisting-theory",
     "regex",
     "typing-extensions",
