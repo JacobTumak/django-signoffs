@@ -97,13 +97,6 @@ max-complexity = 10
 
 [tool.ruff.lint.per-file-ignores]
 "*/__init__.py"             = ["F401"]
-"signoffs/approvals.py"     = ["F401"]
-"signoffs/forms.py"         = ["F401"]
-"signoffs/models.py"        = ["F401"]
-"signoffs/process.py"       = ["F401"]
-"signoffs/signing_order.py" = ["F401"]
-"signoffs/signoffs.py"      = ["F401"]
-"signoffs/views.py"         = ["F401"]
 "signoffs/core/utils.py"    = ["C901"]
 
 # <---------------- bumpver ----------------->

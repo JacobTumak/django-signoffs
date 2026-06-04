@@ -2,14 +2,17 @@
     All Behavioural "Types" are loaded in a global registry to they can be accessed anywhere.
 """
 from __future__ import annotations
+
 from typing import TYPE_CHECKING
+
 from django.core.exceptions import ImproperlyConfigured
 from persisting_theory import Registry
 
 if TYPE_CHECKING:
-    from signoffs.core.signoffs import AbstractSignoff
-    from signoffs.core.approvals import AbstractApproval
     from typing import Callable
+
+    from signoffs.core.approvals import AbstractApproval
+    from signoffs.core.signoffs import AbstractSignoff
 
 __all__ = [
     "signoffs",
@@ -29,7 +32,7 @@ class ObjectRegistry(Registry):
         class_validator = getattr(data, "validate", lambda: True)
         return (
             issubclass(data, self.object_type)
-            and not getattr(data, self.name_attr) in self
+            and getattr(data, self.name_attr) not in self
             and class_validator()
         )
 

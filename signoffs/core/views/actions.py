@@ -26,21 +26,22 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from functools import partial
-from typing import Callable, Protocol, TYPE_CHECKING
+from typing import TYPE_CHECKING, Callable, Protocol
 
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ImproperlyConfigured
-from django.db import transaction, models
+from django.db import models, transaction
 
 import signoffs.registry
-from signoffs.core.utils import Accessor
 from signoffs.approvals import AbstractApproval
+from signoffs.core.utils import Accessor
 from signoffs.process import ApprovalsProcess
 from signoffs.signoffs import AbstractSignoff
 
 if TYPE_CHECKING:
-    from signoffs.forms import AbstractSignoffRevokeForm
     from django.db.models import Field
+
+    from signoffs.forms import AbstractSignoffRevokeForm
 
 User = get_user_model()
 

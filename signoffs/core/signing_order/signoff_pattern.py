@@ -4,11 +4,12 @@ Signing Order pattern matching language. Defines the pattern for a Signing Order
 Pattern Matching is backed by regex_match backend (currently not replaceable, but that'd be a nice idea :-)
 """
 from __future__ import annotations
-from typing import TYPE_CHECKING
+
 import collections.abc
 from functools import cached_property
 from itertools import chain
 from types import SimpleNamespace
+from typing import TYPE_CHECKING
 
 from signoffs import registry
 

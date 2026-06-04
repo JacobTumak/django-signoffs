@@ -4,9 +4,8 @@ App-independent tests for contrib models
 from django.core.exceptions import PermissionDenied
 from django.test import TestCase
 
-from signoffs import approvals, models
+from signoffs import approvals, models, signoffs
 from signoffs import signing_order as so
-from signoffs import signoffs
 from signoffs.core.tests import fixtures
 from signoffs.registry import register
 

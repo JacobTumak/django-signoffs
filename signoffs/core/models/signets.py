@@ -9,8 +9,9 @@ To revoke a `Signet`, we can simply delete the `Signet` record.
 To maintain a "blame" history, we can instead record who and when the signet was revoked with a `RevokedSignet`.
 """
 from __future__ import annotations
-from typing import TYPE_CHECKING
+
 from functools import cached_property
+from typing import TYPE_CHECKING
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AnonymousUser

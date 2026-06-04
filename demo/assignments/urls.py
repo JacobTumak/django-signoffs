@@ -1,6 +1,6 @@
 from django.urls import path
 
-from . import views, htmx_views
+from . import htmx_views, views
 
 app_name = "assignment"
 

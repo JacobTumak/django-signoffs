@@ -78,10 +78,10 @@ class Accessor(str):
             """Traverse to current.bit and return the result or raise ValueError if no such relation"""
             try:
                 return getattr(current, bit)
-            except AttributeError:
+            except AttributeError as e:
                 raise ValueError(
                     self.LOOKUP_ERROR_FMT.format(attr=bit, obj=current, accessor=self)
-                )
+                ) from e
 
         def check_safe(item):
             """Raise ValueError if item is callable and item.alters_data but safe==True"""

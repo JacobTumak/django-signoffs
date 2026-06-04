@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.db import models
 
 from signoffs.models import ApprovalField
+
 from .approvals import NewAssignmentApproval
 
 

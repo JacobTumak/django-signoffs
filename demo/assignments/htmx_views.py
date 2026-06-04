@@ -1,29 +1,24 @@
-from pprint import pprint
 
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.handlers.wsgi import WSGIRequest
 from django.http import HttpResponse
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
-from django.views.decorators.http import require_POST, require_http_methods
-from django.contrib import messages
-from functools import partial
+from django.views.decorators.http import require_http_methods
 from icecream import ic
 
-from demo.assignments.approvals import NewAssignmentApproval
+from demo.assignments.models import Assignment
+from demo.assignments.views import sign_assignment_view
 from demo.assignments.widget_helpers import (
     WIDGET_DIR,
     hx_render_approval,
-    render_new_messages,
+    render_assignment_details,
     render_assignment_selector,
-    render_assignment_details
+    render_new_messages,
 )
-from signoffs.core.models.fields import ApprovalField
 from signoffs.models import ApprovalSignet
-from demo.assignments.models import Assignment
-from demo.assignments.views import sign_assignment_view
 from signoffs.shortcuts import get_approval_or_404
-
 
 # Change behviour to update individual pieces rather then entire assignment-details. show messages after everything that has messages
 # use hx-patch on elements that should be updated?
@@ -75,7 +70,7 @@ def sign_approval_signoff(request):
     assignment = get_object_or_404(Assignment, pk=request.POST['subject_pk'])
 
     if assignment.approval_stamp.id != approval.stamp.id:
-        messages.warning(request, f"🐟 Something smells fishy 🐟")
+        messages.warning(request, "🐟 Something smells fishy 🐟")
         return HttpResponse(
             render_new_messages(request),
             headers={"HX-Retarget": "#messages-content"}
@@ -86,10 +81,10 @@ def sign_approval_signoff(request):
 
     if not (form and form.is_valid()):
         ic(approval.next_signoffs(for_user=request.user))
-        messages.warning(request, f'You do not have permission to sign this signoff.')
+        messages.warning(request, 'You do not have permission to sign this signoff.')
 
     elif not form.is_signed_off():
-        messages.warning(request, f'You must check the box to sign.')
+        messages.warning(request, 'You must check the box to sign.')
 
     else:
         if signet := form.sign(user=request.user):

@@ -13,7 +13,9 @@ To revoke a Stamp, we alter the approval status and revoke the Signet(s) used to
 A "blame" history, may be maintained by using a RevokeSignet model on the Approval Type.
 """
 from __future__ import annotations
+
 from typing import TYPE_CHECKING
+
 from django.core.exceptions import ImproperlyConfigured, ValidationError
 from django.db import models
 from django.utils import timezone

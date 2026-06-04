@@ -2,6 +2,7 @@
     Custom model fields and relation descriptors
 """
 from __future__ import annotations
+
 from functools import cached_property
 
 from django.core.exceptions import ImproperlyConfigured
@@ -135,11 +136,11 @@ def SignoffField(
     """
     try:
         signoff_type = registry.get_signoff_type(signoff_type)
-    except ImproperlyConfigured:
+    except ImproperlyConfigured as e:
         raise ImproperlyConfigured(
             f"SignoffField: signoff_type {signoff_type} must be registered before it can be used to form a relation. "
             "OneToOneField + RelatedSignoff can form relation to Signet Model with a deferred signoff id."
-        )
+        ) from e
     # Intentionally using raw .signetModel, (possibly a str: 'app_label.model_name'), so use can avoid circular imports
     signet_field = SignoffOneToOneField(
         signoff_type.signetModel,
@@ -235,11 +236,11 @@ class SignoffSet:
         try:
             signet_set = self.signet_set_accessor.resolve(instance)
             signet_model = self.signoff_type.get_signetModel()
-        except AttributeError:
+        except AttributeError as e:
             raise ImproperlyConfigured(
                 f'SignoffSet.signet_set_accessor "{self.signet_set_accessor}" '
                 f"does not exist on related model {type(instance)}."
-            )
+            ) from e
 
         signet_set_owner = self.signet_set_owner(instance)
         related_models = [
@@ -422,11 +423,11 @@ def ApprovalField(
     """
     try:
         approval_type = registry.get_approval_type(approval_type)
-    except ImproperlyConfigured:
+    except ImproperlyConfigured as e:
         raise ImproperlyConfigured(
             f"ApprovalField: approval_type {approval_type} must be registered before it's used to form a relation. "
             "A OneToOneField + RelatedApproval can be used to form this relation with a deferred approval id."
-        )
+        ) from e
     # Intentionally using raw .stampModel, (possibly 'app_label.model_name' str), so use can avoid circular imports
     stamp_field = models.OneToOneField(
         approval_type.stampModel,
@@ -534,11 +535,11 @@ class ApprovalSet:
         try:
             stamp_set = getattr(instance, self.stamp_set_accessor)
             stamp_model = self.approval_type.get_stampModel()
-        except AttributeError:
+        except AttributeError as e:
             raise ImproperlyConfigured(
                 f'ApprovalSet.stamp_set_accessor "{self.stamp_set_accessor}" '
                 f"does not exist on related model {type(instance)}."
-            )
+            ) from e
         related_models = [ro.related_model for ro in instance._meta.related_objects]
         if stamp_set.model not in related_models or stamp_set.model is not stamp_model:
             raise ImproperlyConfigured(

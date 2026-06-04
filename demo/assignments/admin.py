@@ -1,6 +1,7 @@
 from django.contrib import admin
 
-from signoffs.models import Stamp, ApprovalSignet
+from signoffs.models import ApprovalSignet, Stamp
+
 from .models import Assignment
 
 admin.site.register(Assignment)

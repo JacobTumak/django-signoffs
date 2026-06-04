@@ -3,7 +3,9 @@
 """
 
 from __future__ import annotations
+
 from typing import TYPE_CHECKING
+
 from signoffs.core.approvals import ApprovalLogic, BaseApproval
 from signoffs.core.forms import SignoffFormsManager
 from signoffs.core.signoffs import BaseSignoff
@@ -13,7 +15,6 @@ from .models import Signet as ApprovalSignet
 from .models import Stamp
 
 if TYPE_CHECKING:
-    from signoffs.core.signoffs import AbstractSignoff
     from signoffs.core.approvals import AbstractApproval
 
 

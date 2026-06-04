@@ -5,8 +5,8 @@ from typing import Protocol
 
 from django.core.exceptions import ImproperlyConfigured
 
-from signoffs.core.signoffs import AbstractSignoff
 from signoffs.core.signing_order import signoff_pattern as pm
+from signoffs.core.signoffs import AbstractSignoff
 
 
 def validate_signing_order_pattern(pattern: pm.SigningOrderPattern):
@@ -18,7 +18,7 @@ def validate_signing_order_pattern(pattern: pm.SigningOrderPattern):
         )
     # The following constraint is not needed in theory, but is a practical and performance reality
     if not all(
-        a.get_signetModel() == b.get_signetModel() for a, b in zip(terms, terms[1:])
+        a.get_signetModel() == b.get_signetModel() for a, b in zip(terms, terms[1:], strict=False)
     ):
         raise ImproperlyConfigured(
             "SigningOrder: all pattern Signoff Types must share the same Signet model."

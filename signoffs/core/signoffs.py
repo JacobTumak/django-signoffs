@@ -8,7 +8,8 @@
         - can think of a Signoff instance as the strategy for managing a Signet instance.
 """
 from __future__ import annotations
-from typing import Callable, Optional, Type, Union, TYPE_CHECKING
+
+from typing import TYPE_CHECKING, Callable, Optional, Type, Union
 
 from django.apps import apps
 from django.core.exceptions import ImproperlyConfigured, PermissionDenied

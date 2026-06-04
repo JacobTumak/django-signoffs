@@ -9,27 +9,28 @@
      - an `Approval` provides the business and presentation logic for a `Stamp` instance.
 """
 from __future__ import annotations
-from typing import Callable, Optional, Union, TYPE_CHECKING
-from typing_extensions import Self
+
+from typing import TYPE_CHECKING, Callable, Optional, Union
 
 from django.apps import apps
 from django.core.exceptions import ImproperlyConfigured, PermissionDenied
 from django.db import transaction
 from django.utils.text import slugify
+from typing_extensions import Self
 
 from signoffs.core import utils
-from signoffs.core.models import managers
+from signoffs.core.models import AbstractApprovalStamp, managers
 from signoffs.core.renderers import ApprovalRenderer
 from signoffs.core.signing_order import SigningOrder
 from signoffs.core.status import ApprovalStatus
 from signoffs.core.urls import ApprovalUrlsManager
-from signoffs.core.models import AbstractApprovalStamp
 
 if TYPE_CHECKING:
+    from django.db.models import Model, QuerySet
+
+    from signoffs.contrib.approvals.approvals import AbstractApproval
     from signoffs.core.models.managers import StampSignoffsManager
     from signoffs.core.signoffs import AbstractSignoff
-    from signoffs.contrib.approvals.approvals import AbstractApproval
-    from django.db.models import Model, QuerySet
 
 # type name shorts
 opt_str = Union[bool, Optional[str]]
@@ -394,7 +395,7 @@ class AbstractApproval:
     def get_posted_signoff(self, data: dict, user) -> AbstractSignoff | None:
         """Get the signoff that matches the `signoff_id` in data iff it's one of the next signoffs"""
         if next_signoffs := self.next_signoffs(for_user=user):
-            if signoffs := [s for s in self.next_signoffs(for_user=user) if s.id == data.get('signoff_id')]:
+            if signoffs := [s for s in next_signoffs if s.id == data.get('signoff_id')]:
                 return signoffs[0]
         return None
 

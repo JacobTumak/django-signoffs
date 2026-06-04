@@ -3,8 +3,9 @@ from django.db import models
 
 from signoffs.models import Signet, SignoffSet, SignoffSingle
 from signoffs.signoffs import SignoffRenderer, SignoffUrlsManager, SimpleSignoff
-from .signets import LikeSignet
+
 from ..signoffs import publication_approval_signoff, publication_request_signoff
+from .signets import LikeSignet
 
 
 class Article(models.Model):

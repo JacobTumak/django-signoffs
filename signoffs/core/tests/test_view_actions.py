@@ -5,7 +5,7 @@ from unittest.mock import Mock
 
 import django_fsm as fsm
 from django.core.exceptions import ImproperlyConfigured
-from django.db.models import Model, TextChoices, CharField
+from django.db.models import CharField, Model, TextChoices
 from django.test import TestCase
 
 import signoffs.core.signing_order as so
@@ -265,14 +265,14 @@ class SignoffFieldUserActionsTests(TestCase):
 
     def test_ambiguous_signet(self):
         with self.assertRaises(ImproperlyConfigured) as context:
-            action = actions.SignoffFieldUserActions(self.user, models.Signet(), self.data)
+            _ = actions.SignoffFieldUserActions(self.user, models.Signet(), self.data)
         self.assertIn("must define a related SignoffField", str(context.exception))
         instance = ModelWithAmbiguousSignoffField.objects.create(label='Test')
         with self.assertRaises(ImproperlyConfigured) as context:
-            action = actions.SignoffFieldUserActions(self.user, instance, self.data)
+            _ = actions.SignoffFieldUserActions(self.user, instance, self.data)
         self.assertIn("multiple SignoffField with same signoff id", str(context.exception))
         with self.assertRaises(ImproperlyConfigured) as context:
-            action = actions.SignoffFieldUserActions(self.user, instance, self.data, signet_accessor='label')
+            _ = actions.SignoffFieldUserActions(self.user, instance, self.data, signet_accessor='label')
         self.assertIn("must be a SignoffField", str(context.exception))
 
     def test_disambiguated_signet(self):

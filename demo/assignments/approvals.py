@@ -1,10 +1,10 @@
 from django.contrib.auth.models import User
 from django.utils.functional import SimpleLazyObject
 
-from signoffs.approvals import ApprovalSignoff, ApprovalRenderer, SimpleApproval
-from signoffs.signoffs import SignoffRenderer, SignoffUrlsManager
+from signoffs.approvals import ApprovalRenderer, ApprovalSignoff, SimpleApproval
 from signoffs.registry import register
 from signoffs.signing_order import SigningOrder
+from signoffs.signoffs import SignoffRenderer, SignoffUrlsManager
 
 
 @register("assignments.approvals.NewAssignmentApproval")
@@ -58,7 +58,7 @@ class NewAssignmentApproval(SimpleApproval):
     def next_signoffs(self, for_user=None):
         if not for_user:
             return super().next_signoffs()
-        if not type(for_user) in (User, SimpleLazyObject):
+        if type(for_user) not in (User, SimpleLazyObject):
             raise TypeError(f"var \"for_user\" must be User instance, instead got {type(for_user)}\n")
         if not self.subject:
 

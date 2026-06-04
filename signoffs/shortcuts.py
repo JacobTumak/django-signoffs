@@ -2,18 +2,18 @@
     Convenience methods for common tasks
 """
 from __future__ import annotations
+
 from typing import TYPE_CHECKING
 
 from django.http import Http404
 from django.shortcuts import get_object_or_404
 
-from signoffs import registry
+from . import registry
 
 if TYPE_CHECKING:
-    from signoffs.core.signoffs import AbstractSignoff
-    from signoffs.core.models.signets import AbstractSignet
-    from signoffs.core.models.stamps import AbstractApprovalStamp
     from signoffs.core.approvals import AbstractApproval
+    from signoffs.core.models.stamps import AbstractApprovalStamp
+    from signoffs.core.signoffs import AbstractSignoff
 
 
 def get_signet_or_404(signoff_type, signet_pk=None, **kwargs):

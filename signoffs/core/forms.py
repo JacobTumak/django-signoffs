@@ -22,7 +22,8 @@ To solve this for concrete `Signets` with relational fields, try ONE of these ap
     be sure to override `clean()` to validate the extra data.
 """
 from __future__ import annotations
-from typing import Callable, Type, Union, TYPE_CHECKING
+
+from typing import TYPE_CHECKING, Callable, Type, Union
 
 from django import forms
 from django.core.exceptions import ImproperlyConfigured, ValidationError
@@ -30,8 +31,8 @@ from django.core.exceptions import ImproperlyConfigured, ValidationError
 from signoffs.core.utils import class_service
 
 if TYPE_CHECKING:
-    from signoffs.core.signoffs import AbstractSignoff
     from signoffs.core.models.signets import AbstractSignet
+    from signoffs.core.signoffs import AbstractSignoff
 
 opt_callable = Union[Type, Callable]
 
@@ -157,14 +158,14 @@ class AbstractSignoffRevokeForm(forms.Form):
         try:
             return registry.get_signoff_type(self.cleaned_data.get("signoff_id"))
         except ImproperlyConfigured as e:
-            raise ValidationError(str(e))
+            raise ValidationError(str(e)) from e
 
     def _get_signet(self, signoff_type):
         signetModel = signoff_type.get_signetModel()
         try:
             return signetModel.objects.get(pk=self.cleaned_data.get("signet_pk"))
         except signetModel.DoesNotExist as e:
-            raise ValidationError(str(e))
+            raise ValidationError(str(e)) from e
 
     def clean(self) -> dict:
         """
