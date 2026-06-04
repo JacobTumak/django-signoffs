@@ -17,9 +17,9 @@ copyright = "2022, Joseph Fall"
 author = "Joseph Fall"
 
 # The short X.Y version.
-version = "0.3.12"
+version = "0.4.0"
 # The full version, including alpha/beta/rc tags.
-release = "0.3.12"
+release = "0.4.0"
 
 # The master toctree document.
 master_doc = "home"
