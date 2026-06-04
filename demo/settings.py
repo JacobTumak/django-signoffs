@@ -27,12 +27,10 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django_htmx",
     "crispy_forms",
-
     "demo",
     "demo.article",
     "demo.assignments",
     "demo.registration",
-
     "signoffs",
     "signoffs.contrib.signets",
     "signoffs.contrib.approvals",
@@ -46,7 +44,6 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-
     "django_htmx.middleware.HtmxMiddleware",
 ]
 

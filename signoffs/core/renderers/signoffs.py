@@ -1,6 +1,7 @@
 """
-    Objects that know how to render other Signoffs / Signets into HTML
+Objects that know how to render other Signoffs / Signets into HTML
 """
+
 from django.template.loader import render_to_string
 
 from signoffs.core import utils

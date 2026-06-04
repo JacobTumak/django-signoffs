@@ -1,6 +1,7 @@
 """
 App-dependent tests for signoff model fields and relation descriptors
 """
+
 from django.test import TestCase
 
 from signoffs.core.tests import fixtures
@@ -39,7 +40,9 @@ class SignoffSetTests(TestCase):
         self.assertTrue(self.vacation.employee_signoff.matches(signoffs.agree_signoff))
 
     def test_signoff_field_form(self):
-        v, _ = models.Vacation.objects.get_or_create(employee_signet__user=self.employee)
+        v, _ = models.Vacation.objects.get_or_create(
+            employee_signet__user=self.employee
+        )
         form = v.employee_signoff.forms.get_signoff_form(
             data={"signed_off": "on", "signoff_id": "test_app.agree"}
         )
@@ -51,18 +54,24 @@ class SignoffSetTests(TestCase):
         self.assertEqual(signoff.signatory, self.employee)
         # Must save Vacation instance to persist the FK relation!
         v.save()
-        _, created = models.Vacation.objects.get_or_create(employee_signet__user=self.employee)
+        _, created = models.Vacation.objects.get_or_create(
+            employee_signet__user=self.employee
+        )
         self.assertFalse(created)
 
     def test_signoff_field_form_signed(self):
-        v, _ = models.Vacation.objects.get_or_create(employee_signet__user=self.employee)
+        v, _ = models.Vacation.objects.get_or_create(
+            employee_signet__user=self.employee
+        )
         form = v.employee_signoff.forms.get_signoff_form(
             data={"signed_off": "on", "signoff_id": "test_app.agree"}
         )
         v.employee_signet = form.sign(user=self.employee, commit=True)
         v.save()
 
-        v, created = models.Vacation.objects.get_or_create(employee_signet__user=self.employee)
+        v, created = models.Vacation.objects.get_or_create(
+            employee_signet__user=self.employee
+        )
         self.assertFalse(created)
         self.assertTrue(v.employee_signoff.is_signed())
         self.assertEqual(v.employee_signoff.signatory, self.employee)

@@ -1,7 +1,7 @@
 """
-    Some basic Signoff Types backed by the Signet models defined in this package
+Some basic Signoff Types backed by the Signet models defined in this package
 
-    Add `"signoffs.contrib.signets"` to `settings.INSTALLED_APPS`
+Add `"signoffs.contrib.signets"` to `settings.INSTALLED_APPS`
 """
 
 from signoffs.core.signoffs import BaseSignoff, SignoffLogic

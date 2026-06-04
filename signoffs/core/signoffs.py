@@ -1,12 +1,13 @@
 """
-    A Signoff defines the business and presentation logic for collecting a single "signature"
+A Signoff defines the business and presentation logic for collecting a single "signature"
 
-    Signoff Types are registered subclasses of AbstractSignoff
-        - they define the behaviour for a Signoff.
-    Persistence layer for Signoff state is provided by a Signet model
-        - one concrete Signet model can back any number of Signoff Types
-        - can think of a Signoff instance as the strategy for managing a Signet instance.
+Signoff Types are registered subclasses of AbstractSignoff
+    - they define the behaviour for a Signoff.
+Persistence layer for Signoff state is provided by a Signet model
+    - one concrete Signet model can back any number of Signoff Types
+    - can think of a Signoff instance as the strategy for managing a Signet instance.
 """
+
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Callable, Optional, Type, Union
@@ -59,7 +60,7 @@ def revoke_signoff(signoff, user, reason="", revokeModel=None, **kwargs):
     # always delete the signet to ensure any FK relations to signet are updated.
     signoff.signet.delete()
     signoff.signet.id = None
-    if revokeModel:   # restore the signet if we are keeping a record of its revocation.
+    if revokeModel:  # restore the signet if we are keeping a record of its revocation.
         signoff.signet.save()
         return revokeModel.objects.create(
             signet=signoff.signet, user=user, reason=reason
@@ -283,7 +284,7 @@ class AbstractSignoff:
         Shortcut for self.forms.get_signoff_form.
         kwargs passed to self.forms.get_signoff_form(...)
         """
-        kwargs.setdefault('instance', self)
+        kwargs.setdefault("instance", self)
         return self.forms.get_signoff_form(**kwargs)
 
     @classmethod

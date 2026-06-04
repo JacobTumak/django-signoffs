@@ -1,6 +1,7 @@
 """
-    Test Suite for regex_match pattern matching language
+Test Suite for regex_match pattern matching language
 """
+
 from django.test import SimpleTestCase
 
 from ..regex_match import (

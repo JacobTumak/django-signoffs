@@ -1,6 +1,7 @@
 """
-    contrib.approvals adds basic concrete ApprovalStamp-related models, signoffs, and approvals.
+contrib.approvals adds basic concrete ApprovalStamp-related models, signoffs, and approvals.
 """
+
 from django.apps import AppConfig
 
 

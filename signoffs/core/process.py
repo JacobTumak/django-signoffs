@@ -1,20 +1,21 @@
 """
-    Classes, Descriptors, and decorators for coordinating state transitions driven by an Approval Process
-    Used to manage a multi-state approval process where state transitions are triggered by Approvals.
-    Core responsibility: ensure integrity / consistency of approval state and state transitions
+Classes, Descriptors, and decorators for coordinating state transitions driven by an Approval Process
+Used to manage a multi-state approval process where state transitions are triggered by Approvals.
+Core responsibility: ensure integrity / consistency of approval state and state transitions
 
-    A "transition" is just a method on your process model that manages a single state transition.
-    An "approval transition" is a transition that is dependent on an Approval being approved or revoked.
+A "transition" is just a method on your process model that manages a single state transition.
+An "approval transition" is a transition that is dependent on an Approval being approved or revoked.
 
-    Transitions handle side-effects.  Generally, decorators, like django_fsm.transition, are used to perform
-        any state transitions (like approvals or revokes), and like django_fsm, these state changes must be
-        saved to the DB as a separate step after a successful transition is made.
-        See convenience methods BasicApprovalProcess.try_*_transition for examples of how to correctly compelte a transition.
+Transitions handle side-effects.  Generally, decorators, like django_fsm.transition, are used to perform
+    any state transitions (like approvals or revokes), and like django_fsm, these state changes must be
+    saved to the DB as a separate step after a successful transition is made.
+    See convenience methods BasicApprovalProcess.try_*_transition for examples of how to correctly compelte a transition.
 
-    django-fsm integration:
-        - FSMApprovalProcess enforces FSM logic withing the BasicApprovalProcess API
-        - FSMApprovalProcessDescriptor provides a declarative syntax for defining an FSM Approval Process
+django-fsm integration:
+    - FSMApprovalProcess enforces FSM logic withing the BasicApprovalProcess API
+    - FSMApprovalProcessDescriptor provides a declarative syntax for defining an FSM Approval Process
 """
+
 import inspect
 from collections import defaultdict
 from dataclasses import dataclass, field
@@ -173,7 +174,8 @@ class TransactionSave(AbstractPersistTransition):
 
     def __call__(self, *args, **kwargs):
         """Save the transitioned instance and the approved approval in a transaction"""
-        with transaction.atomic():  # Do both the approval and state transition together, or do neither.
+        # Do both the approval and state transition together, or do neither.
+        with transaction.atomic():
             self.approval.save()
             self.instance.save()
 
@@ -184,7 +186,8 @@ class TransactionRevoke(AbstractPersistTransition):
 
     def __call__(self, user, *args, **kwargs):
         """Save the transitioned instance and revoke the approval for given user in a transaction"""
-        with transaction.atomic():  # Do both the revoke and state transition together, or do neither.
+        # Do both the revoke and state transition together, or do neither.
+        with transaction.atomic():
             self.approval.revoke(user=user)
             self.instance.save()
 

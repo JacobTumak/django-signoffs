@@ -1,5 +1,5 @@
 """
-    Basic concrete implementations for ApprovalStamp related models
+Basic concrete implementations for ApprovalStamp related models
 """
 
 from signoffs.core.models import (

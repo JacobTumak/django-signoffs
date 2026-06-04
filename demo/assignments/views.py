@@ -1,6 +1,7 @@
 """
 CRUD and list views for Assignment app
 """
+
 from django.contrib import messages
 from django.contrib.auth.decorators import (
     login_required,

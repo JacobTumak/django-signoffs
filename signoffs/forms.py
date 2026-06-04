@@ -1,6 +1,7 @@
 """
 Proxy for signoffs.core.forms to simplify import statements and hide core package structure from client code.
 """
+
 from django.apps import apps
 
 from signoffs.core.forms import (

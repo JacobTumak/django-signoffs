@@ -1,7 +1,8 @@
 """
-    Core signoffs framework - does not define any concrete models itself.
-    Add contrib.signoffs and/or contrib.approvals to add out-of-the-box concrete models.
+Core signoffs framework - does not define any concrete models itself.
+Add contrib.signoffs and/or contrib.approvals to add out-of-the-box concrete models.
 """
+
 from django.apps import AppConfig
 
 from signoffs import settings

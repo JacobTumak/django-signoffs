@@ -21,6 +21,7 @@ To solve this for concrete `Signets` with relational fields, try ONE of these ap
     Use initial data to populate these fields and
     be sure to override `clean()` to validate the extra data.
 """
+
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Callable, Type, Union
@@ -76,7 +77,9 @@ class AbstractSignoffForm(forms.ModelForm):
 
         # the signoff returned from cleaned_data must match the form's signoff instance
         id = cleaned_data.get("signoff_id")
-        signoff_type = type(self.signoff_instance) if self.signoff_instance else self.signoff_type
+        signoff_type = (
+            type(self.signoff_instance) if self.signoff_instance else self.signoff_type
+        )
         if signoff_type is not None and signoff_type.id != id:
             raise ValidationError(
                 f"Invalid signoff form - signoff type {signoff_type} does not match form {id}"
@@ -106,10 +109,10 @@ class AbstractSignoffForm(forms.ModelForm):
 
 
 def signoff_form_factory(
-        signoff_type,
-        baseForm=AbstractSignoffForm,
-        form_prefix=None,
-        signoff_field_kwargs=None,
+    signoff_type,
+    baseForm=AbstractSignoffForm,
+    form_prefix=None,
+    signoff_field_kwargs=None,
 ) -> type[AbstractSignoffForm] | forms.ModelForm:
     """
     Returns a Form class suited to collecting a signoff.
@@ -214,10 +217,10 @@ class AbstractSignoffRevokeForm(forms.Form):
 
 
 def revoke_form_factory(
-        signoff_type,
-        baseForm=AbstractSignoffRevokeForm,
-        form_prefix=None,
-        signoff_field_kwargs=None,
+    signoff_type,
+    baseForm=AbstractSignoffRevokeForm,
+    form_prefix=None,
+    signoff_field_kwargs=None,
 ) -> type[AbstractSignoffRevokeForm]:
     """
     Returns a Form class suited to validation a signoff revoke request.
@@ -276,7 +279,7 @@ class SignoffTypeForms:
 
     def get_signoff_form(self, data=None, **kwargs) -> AbstractSignoffForm:
         """Return a form instance suited to collecting this signoff type for simple case, no factory args required"""
-        kwargs.setdefault('signoff_type', self.signoff_type)
+        kwargs.setdefault("signoff_type", self.signoff_type)
         return self.get_signoff_form_class()(data=data, **kwargs)
 
     def get_revoke_form(self, data=None, **kwargs) -> AbstractSignoffRevokeForm:

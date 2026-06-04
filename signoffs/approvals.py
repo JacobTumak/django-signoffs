@@ -1,6 +1,7 @@
 """
-    Proxy for Approval Types to simplify import statements and hide core package structure from client code.
+Proxy for Approval Types to simplify import statements and hide core package structure from client code.
 """
+
 from django.apps import apps
 
 from signoffs.core import signing_order

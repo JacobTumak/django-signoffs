@@ -1,6 +1,7 @@
 """
-    contrib.signets adds basic concrete Signet and RevokedSignet models
+contrib.signets adds basic concrete Signet and RevokedSignet models
 """
+
 from django.apps import AppConfig
 
 

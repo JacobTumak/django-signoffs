@@ -6,6 +6,7 @@ Design Constraints:
 
     Partial matches are essential & need to obtain next unmatched tokens in sequence.
 """
+
 import itertools
 from dataclasses import dataclass, field
 

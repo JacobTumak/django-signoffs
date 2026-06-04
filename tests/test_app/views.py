@@ -1,9 +1,10 @@
 """
-    Views for demonstrating and testing templates, templatetags, and rendering logic
+Views for demonstrating and testing templates, templatetags, and rendering logic
 
-    TODO: extend these views so they can be used to drive an approval process.
-        add post form handling logic, etc.
+TODO: extend these views so they can be used to drive an approval process.
+    add post form handling logic, etc.
 """
+
 from django.views import generic
 
 from signoffs.shortcuts import get_approval_stamp_or_404, get_signet_or_404

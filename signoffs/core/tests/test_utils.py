@@ -1,6 +1,7 @@
 """
 signoffs.utils test suite
 """
+
 from types import SimpleNamespace
 
 from django.test import SimpleTestCase

@@ -1,6 +1,7 @@
 """
-    Test Suite for regex_match pattern matching language
+Test Suite for regex_match pattern matching language
 """
+
 from types import SimpleNamespace
 
 from django.test import SimpleTestCase
@@ -26,9 +27,9 @@ from ..signoff_pattern import (
 #   Pattern objects are classes and tokens are instances of those classes
 obj_repr = SimpleNamespace(
     pattern_to_str=lambda obj: obj.__name__,
-    pattern_from_str=lambda name: globals()[name]
-    if name in globals()
-    else __builtins__[name],
+    pattern_from_str=lambda name: (
+        globals()[name] if name in globals() else __builtins__[name]
+    ),
     to_str=lambda obj: type(obj).__name__,
 )
 

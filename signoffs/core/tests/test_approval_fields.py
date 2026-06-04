@@ -1,6 +1,7 @@
 """
 App-independent tests for Approval model descriptors - no app logic
 """
+
 from django.contrib.auth.models import AnonymousUser
 from django.test import TestCase
 

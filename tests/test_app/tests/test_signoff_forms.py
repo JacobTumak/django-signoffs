@@ -1,6 +1,7 @@
 """
 App-dependent tests for signoff forms - requires models that can be saved, etc.
 """
+
 from django.core import exceptions
 from django.test import TestCase
 
@@ -56,7 +57,9 @@ class SignoffFormWithUserTests(TestCase):
         self.assertTrue(valid_form.is_valid())
         self.assertFalse(invalid_form.is_valid())
         self.assertTrue(isinstance(s, valid_form.signoff_type))
-        self.assertFalse(isinstance(signoffs.accept_signoff.get(), invalid_form.signoff_type)) # check form doesn't get signoff_type from signoff_id
+        self.assertFalse(
+            isinstance(signoffs.accept_signoff.get(), invalid_form.signoff_type)
+        )  # check form doesn't get signoff_type from signoff_id
 
 
 class SignoffFormWithRelationTests(TestCase):

@@ -1,6 +1,7 @@
 """
-    Objects that know how to assess the status of an Approval
+Objects that know how to assess the status of an Approval
 """
+
 from signoffs.core import utils
 
 

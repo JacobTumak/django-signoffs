@@ -1,6 +1,7 @@
 """
 App-independent tests for Signoff models - no app logic
 """
+
 from django.contrib.auth import get_user_model
 from django.core import exceptions
 from django.test import SimpleTestCase, TestCase

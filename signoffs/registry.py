@@ -1,6 +1,7 @@
 """
-    All Behavioural "Types" are loaded in a global registry to they can be accessed anywhere.
+All Behavioural "Types" are loaded in a global registry to they can be accessed anywhere.
 """
+
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
@@ -14,11 +15,7 @@ if TYPE_CHECKING:
     from signoffs.core.approvals import AbstractApproval
     from signoffs.core.signoffs import AbstractSignoff
 
-__all__ = [
-    "signoffs",
-    "approvals",
-    "register"
-]
+__all__ = ["signoffs", "approvals", "register"]
 
 
 class ObjectRegistry(Registry):
@@ -63,7 +60,9 @@ signoffs = SignoffTypes()
 """Singleton - the Signoff Types registry. `(see persisting_theory.Registry)`"""
 
 
-def get_signoff_type(signoff_id_or_type: str | type[AbstractSignoff]) -> type[AbstractSignoff]:
+def get_signoff_type(
+    signoff_id_or_type: str | type[AbstractSignoff],
+) -> type[AbstractSignoff]:
     """
     Return a registered Signoff Type or raise ImproperlyConfigured if no such type was registered.
     Convenience function accepts either a Type or an id, and checks for existence.
@@ -97,7 +96,9 @@ approvals = ApprovalTypes()
 """Singleton - the Approval Types registry. `(see persisting_theory.Registry)`"""
 
 
-def get_approval_type(approval_id_or_type: str | type[AbstractApproval]) -> type[AbstractApproval]:
+def get_approval_type(
+    approval_id_or_type: str | type[AbstractApproval],
+) -> type[AbstractApproval]:
     """
     Return a registered Approval Type or raise ImproperlyConfigured if not such type was registered.
     Convenience function accepts either a Type or an id, and checks for existence.
@@ -118,11 +119,7 @@ def get_approval_id(approval_type: str | type[AbstractApproval]) -> str:
     """
     Return the str approval.id for an approval, approval_type, or approval_id object.
     """
-    return (
-        approval_type
-        if isinstance(approval_type, str)
-        else approval_type.id
-    )
+    return approval_type if isinstance(approval_type, str) else approval_type.id
 
 
 # Class decorator to simplify registering a base Type class

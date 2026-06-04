@@ -62,15 +62,20 @@ No default users were found. Please run "python manage.py create_article_data an
             assignment = Assignment.objects.create(**args)
 
             while assignment.status != end_at_status:
-                if signoff := assignment.approval.get_next_signoff(for_user=data['assigned_by']):
-                    signoff.sign(user=data['assigned_by'], commit=True)
+                if signoff := assignment.approval.get_next_signoff(
+                    for_user=data["assigned_by"]
+                ):
+                    signoff.sign(user=data["assigned_by"], commit=True)
                     assignment.bump_status()
-                elif signoff := assignment.approval.get_next_signoff(for_user=data['assigned_to']):
-                    signoff.sign(user=data['assigned_to'], commit=True)
+                elif signoff := assignment.approval.get_next_signoff(
+                    for_user=data["assigned_to"]
+                ):
+                    signoff.sign(user=data["assigned_to"], commit=True)
                     assignment.bump_status()
                 else:
-                    raise RuntimeError("loop aborted, end status not reached, but no more signoffs can be signed in this approval process")
-
+                    raise RuntimeError(
+                        "loop aborted, end status not reached, but no more signoffs can be signed in this approval process"
+                    )
 
             # assign_project_signoff = assignment.approval.get_next_signoff(
             #     for_user=staff_user

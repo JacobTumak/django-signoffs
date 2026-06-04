@@ -1,6 +1,7 @@
 """
-    Test fixture factories for signoff models
+Test fixture factories for signoff models
 """
+
 import uuid
 from functools import partial
 

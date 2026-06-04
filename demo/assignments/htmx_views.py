@@ -1,4 +1,3 @@
-
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.handlers.wsgi import WSGIRequest
@@ -37,20 +36,16 @@ def get_request(request) -> tuple[WSGIRequest, bool]:
 @login_required
 def dashboard_view(request):
     assignments = Assignment.objects.all()
-    ctx = {
-        "assignments": assignments,
-        "render_approval": True,
-        "is_oob": False
-    }
-    return render(
-        request, "assignments/dashboard.html", ctx
-    )
+    ctx = {"assignments": assignments, "render_approval": True, "is_oob": False}
+    return render(request, "assignments/dashboard.html", ctx)
 
 
-def update_oob_content(request):  # add behaviour to update headers before sending request from the front end
+def update_oob_content(request):
+    # add behaviour to update headers before sending request from the front end
     request, _ = get_request(request)
     ic(request)
     return HttpResponse("Hello")
+
 
 # def update_from_submission(request):
 #     html = "\n".join([
@@ -64,16 +59,17 @@ def update_oob_content(request):  # add behaviour to update headers before sendi
 def sign_approval_signoff(request):
     request, is_htmx = get_request(request)
     if not is_htmx:
-        return sign_assignment_view(request, assignment_pk=request.POST['subject_pk'])
+        return sign_assignment_view(request, assignment_pk=request.POST["subject_pk"])
 
-    approval = get_approval_or_404(request.POST['approval_type'], pk=request.POST['stamp'])
-    assignment = get_object_or_404(Assignment, pk=request.POST['subject_pk'])
+    approval = get_approval_or_404(
+        request.POST["approval_type"], pk=request.POST["stamp"]
+    )
+    assignment = get_object_or_404(Assignment, pk=request.POST["subject_pk"])
 
     if assignment.approval_stamp.id != approval.stamp.id:
         messages.warning(request, "🐟 Something smells fishy 🐟")
         return HttpResponse(
-            render_new_messages(request),
-            headers={"HX-Retarget": "#messages-content"}
+            render_new_messages(request), headers={"HX-Retarget": "#messages-content"}
         )
 
     approval.subject = assignment
@@ -81,23 +77,23 @@ def sign_approval_signoff(request):
 
     if not (form and form.is_valid()):
         ic(approval.next_signoffs(for_user=request.user))
-        messages.warning(request, 'You do not have permission to sign this signoff.')
+        messages.warning(request, "You do not have permission to sign this signoff.")
 
     elif not form.is_signed_off():
-        messages.warning(request, 'You must check the box to sign.')
+        messages.warning(request, "You must check the box to sign.")
 
     else:
         if signet := form.sign(user=request.user):
             assignment.bump_status()
-            messages.success(request, f'{signet.signoff.id} signed successfully!')
+            messages.success(request, f"{signet.signoff.id} signed successfully!")
         else:
             messages.error(request, "Error signing form. Please don't try again later.")
 
     return HttpResponse(
-        hx_render_approval(approval, request_user=request.user, request=request) +
-        render_assignment_selector(request, Assignment.objects.all()) +
-        render_assignment_details(request, assignment, render_approval=False) +
-        render_new_messages(request)
+        hx_render_approval(approval, request_user=request.user, request=request)
+        + render_assignment_selector(request, Assignment.objects.all())
+        + render_assignment_details(request, assignment, render_approval=False)
+        + render_new_messages(request)
     )
 
 
@@ -110,7 +106,7 @@ def revoke_signoff(request, signet_pk):
         return redirect(request.META.get("HTTP_REFERER", "assignment:dashboard"))
 
     signet = get_object_or_404(ApprovalSignet, pk=signet_pk)
-    assignment = get_object_or_404(Assignment, pk=request.POST['subject_pk'])
+    assignment = get_object_or_404(Assignment, pk=request.POST["subject_pk"])
     signet.signoff.revoke_if_permitted(user=request.user)
     if not signet.id:
         assignment.bump_status(decrease=True)
@@ -120,10 +116,12 @@ def revoke_signoff(request, signet_pk):
     return HttpResponse(
         # request must be supplied to underlying `render_to_string()`,
         # otherwise the csrf_token will not be rendered (renders as `none` instead) - I think
-        hx_render_approval(assignment.approval, request_user=request.user, request=request) +
-        render_assignment_selector(request, Assignment.objects.all()) +
-        render_assignment_details(request, assignment, render_approval=False) +
-        render_new_messages(request)
+        hx_render_approval(
+            assignment.approval, request_user=request.user, request=request
+        )
+        + render_assignment_selector(request, Assignment.objects.all())
+        + render_assignment_details(request, assignment, render_approval=False)
+        + render_new_messages(request)
     )
 
 
@@ -131,39 +129,49 @@ def assignment_details(request, assignment_pk):
     request, _ = get_request(request)
     assignment = get_object_or_404(Assignment, pk=assignment_pk)
     return HttpResponse(
-        render_assignment_details(request, assignment, is_oob=False) +
-        render_new_messages(request),
+        render_assignment_details(request, assignment, is_oob=False)
+        + render_new_messages(request),
     )
 
 
 def list_assignments(request):
     assignments = Assignment.objects.all()
-    html = "\n".join([
-        # assignment.approval.render(request_user=request.user, request=request),
-        render_assignment_details(request, assignments.first()),
-        render_assignment_selector(request, assignments, is_oob=False),
-        render_new_messages(request)
-    ])
+    html = "\n".join(
+        [
+            # assignment.approval.render(request_user=request.user, request=request),
+            render_assignment_details(request, assignments.first()),
+            render_assignment_selector(request, assignments, is_oob=False),
+            render_new_messages(request),
+        ]
+    )
     return HttpResponse(html)
 
 
 def refresh_messages(request):
     new_messages = messages.get_messages(request)
-    return HttpResponse(render_to_string(WIDGET_DIR/"messages.html", dict(new_messages=new_messages), request))
+    return HttpResponse(
+        render_to_string(
+            WIDGET_DIR / "messages.html", dict(new_messages=new_messages), request
+        )
+    )
 
 
-@require_http_methods(['DELETE'])
+@require_http_methods(["DELETE"])
 def erase_assignment_progress(request, assignment_pk):
     request, _ = get_request(request)
     assignment = get_object_or_404(Assignment, pk=assignment_pk)
     assignment.erase_progress()
     assignment.approval_stamp = assignment.approval.stamp
     assignment.approval_stamp.save()
-    messages.success(request, f"Cleared all signoff data for {assignment.assignment_name}")
+    messages.success(
+        request, f"Cleared all signoff data for {assignment.assignment_name}"
+    )
     return HttpResponse(
-        render_assignment_selector(request, Assignment.objects.all()) +
-        render_assignment_details(request, assignment, render_approval=True, is_oob=False) +
-        render_new_messages(request)
+        render_assignment_selector(request, Assignment.objects.all())
+        + render_assignment_details(
+            request, assignment, render_approval=True, is_oob=False
+        )
+        + render_new_messages(request)
     )
 
 

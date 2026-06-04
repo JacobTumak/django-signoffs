@@ -19,9 +19,9 @@ def hx_render_approval(approval, **kwargs):
         is_oob=False,
     )
     ctx.update(**kwargs)
-    if request := kwargs.get('request'):  # TODO: fix csrf_token in the actual renderers
+    if request := kwargs.get("request"):  # TODO: fix csrf_token in the actual renderers
         _csrf_token = get_token(request)
-        ctx.setdefault('csrf_token', _csrf_token)
+        ctx.setdefault("csrf_token", _csrf_token)
     return approval.render(**ctx)
 
 
@@ -29,10 +29,12 @@ def render_new_messages(request, is_oob=True, notify=False):
     if notify:
         messages.info(request, "Loaded Messages")
     ctx = {"is_oob": is_oob}
-    return render_to_string(WIDGET_DIR/"messages.html", ctx, request)
+    return render_to_string(WIDGET_DIR / "messages.html", ctx, request)
 
 
-def render_assignment_details(request, assignment: Assignment, is_oob=True, notify=False, render_approval=True):
+def render_assignment_details(
+    request, assignment: Assignment, is_oob=True, notify=False, render_approval=True
+):
     if notify:
         messages.info(request, f"Loaded {assignment}")
     ctx = {
@@ -41,7 +43,9 @@ def render_assignment_details(request, assignment: Assignment, is_oob=True, noti
         "render_approval": render_approval,
     }
     return render_to_string(
-        WIDGET_DIR/"assignment_details.html", ctx, request=request,
+        WIDGET_DIR / "assignment_details.html",
+        ctx,
+        request=request,
     )
 
 
@@ -55,5 +59,7 @@ def render_assignment_selector(request, qs: QuerySet, is_oob=True, notify=False)
         "is_oob": is_oob,
     }
     return render_to_string(
-        WIDGET_DIR/"list-assignments.html", context=ctx, request=request,
+        WIDGET_DIR / "list-assignments.html",
+        context=ctx,
+        request=request,
     )

@@ -2,6 +2,7 @@
 Some concrete signoff models for the test app
     Demonstrates how to define custom signoffs and approvals using the contrib.approvals models as a basis.
 """
+
 from django.db import models
 from django_fsm import FSMField, transition
 
@@ -27,8 +28,11 @@ Signet = Signet  # pass-through
 
 # Models for Signoff tests
 
+
 class Subscription(models.Model):
-    subscriber_signoff, subscriber_signet = SignoffField(signoff_type="test_app.subscribe_signoff")
+    subscriber_signoff, subscriber_signet = SignoffField(
+        signoff_type="test_app.subscribe_signoff"
+    )
 
 
 # Signoffs can be registered in Models to avoid circular imports.
@@ -75,7 +79,6 @@ class Vacation(models.Model):
     # employee_signoff = RelatedSignoff('test_app.agree', employee_signoff)
 
     signoffset = SignoffSet("test_app.hr_signoff")
-
 
 
 class VacationSignet(AbstractSignet):

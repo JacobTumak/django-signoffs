@@ -1,6 +1,7 @@
 """
 App-independent tests for view.actions - no app logic
 """
+
 from unittest.mock import Mock
 
 import django_fsm as fsm
@@ -243,7 +244,9 @@ class SignoffFieldUserActionsTests(TestCase):
         action = actions.SignoffFieldUserActions(self.user, self.instance, self.data)
         self.assertTrue(action.sign_signoff())
         self.assertTrue(action.signoff.is_signed())
-        instance = ModelWithSignoffField.objects.select_related('signet').get(pk=self.instance.pk)
+        instance = ModelWithSignoffField.objects.select_related("signet").get(
+            pk=self.instance.pk
+        )
         self.assertEqual(instance.signet, action.signoff.signet)
 
     def revoke_data(self):
@@ -257,30 +260,42 @@ class SignoffFieldUserActionsTests(TestCase):
         )
 
     def test_revoke_signoff(self):
-        r_action = actions.SignoffFieldUserActions(self.user, self.instance, self.revoke_data())
+        r_action = actions.SignoffFieldUserActions(
+            self.user, self.instance, self.revoke_data()
+        )
         self.assertTrue(r_action.revoke_signoff(commit=True))
         self.assertFalse(r_action.signoff.is_signed())
-        instance = ModelWithSignoffField.objects.select_related('signet').get(pk=self.instance.pk)
+        instance = ModelWithSignoffField.objects.select_related("signet").get(
+            pk=self.instance.pk
+        )
         self.assertEqual(instance.signet, None)
 
     def test_ambiguous_signet(self):
         with self.assertRaises(ImproperlyConfigured) as context:
             _ = actions.SignoffFieldUserActions(self.user, models.Signet(), self.data)
         self.assertIn("must define a related SignoffField", str(context.exception))
-        instance = ModelWithAmbiguousSignoffField.objects.create(label='Test')
+        instance = ModelWithAmbiguousSignoffField.objects.create(label="Test")
         with self.assertRaises(ImproperlyConfigured) as context:
             _ = actions.SignoffFieldUserActions(self.user, instance, self.data)
-        self.assertIn("multiple SignoffField with same signoff id", str(context.exception))
+        self.assertIn(
+            "multiple SignoffField with same signoff id", str(context.exception)
+        )
         with self.assertRaises(ImproperlyConfigured) as context:
-            _ = actions.SignoffFieldUserActions(self.user, instance, self.data, signet_accessor='label')
+            _ = actions.SignoffFieldUserActions(
+                self.user, instance, self.data, signet_accessor="label"
+            )
         self.assertIn("must be a SignoffField", str(context.exception))
 
     def test_disambiguated_signet(self):
-        instance = ModelWithAmbiguousSignoffField.objects.create(label='Test')
-        action = actions.SignoffFieldUserActions(self.user, instance, self.data, signet_accessor='signet2')
+        instance = ModelWithAmbiguousSignoffField.objects.create(label="Test")
+        action = actions.SignoffFieldUserActions(
+            self.user, instance, self.data, signet_accessor="signet2"
+        )
         self.assertTrue(action.sign_signoff())
         self.assertTrue(action.signoff.is_signed())
-        instance = ModelWithAmbiguousSignoffField.objects.select_related('signet2').get(pk=instance.pk)
+        instance = ModelWithAmbiguousSignoffField.objects.select_related("signet2").get(
+            pk=instance.pk
+        )
         self.assertEqual(instance.signet2, action.signoff.signet)
 
 

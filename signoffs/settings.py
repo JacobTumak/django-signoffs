@@ -1,4 +1,4 @@
-""" Default settings can be overridden in project settings """
+"""Default settings can be overridden in project settings"""
 
 from django.conf import settings
 

@@ -5,6 +5,7 @@ In fact, the default renderers assume an approval knows the URL for revoke reque
 This component can be extended to provide flexible url services to approval instances.
 They are generally "injected" into the Approval Type using a `ApprovalUrlsManager` service descriptor
 """
+
 from django.urls import reverse
 
 from signoffs.core.utils import service

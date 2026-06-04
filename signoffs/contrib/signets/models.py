@@ -1,5 +1,5 @@
 """
-    Basic concrete implementation for Signet models
+Basic concrete implementation for Signet models
 """
 
 from signoffs.core.models import AbstractRevokedSignet, AbstractSignet

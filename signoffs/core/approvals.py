@@ -1,13 +1,14 @@
 """
-    An Approval manages logic for collecting and sequencing one or more Signoffs.
+An Approval manages logic for collecting and sequencing one or more Signoffs.
 
-    `Approval Types` are registered subclasses of AbstractApproval
-     - they define the behaviour, sequencing logic, and state transition logic for an Approval instance.
+`Approval Types` are registered subclasses of AbstractApproval
+ - they define the behaviour, sequencing logic, and state transition logic for an Approval instance.
 
-    Persistence layer for `Approval` state is provided by a `Stamp` model (think "Stamp of Approval" or TimeStamp)
-     - one concrete `Stamp` model can back any number of Approval Types
-     - an `Approval` provides the business and presentation logic for a `Stamp` instance.
+Persistence layer for `Approval` state is provided by a `Stamp` model (think "Stamp of Approval" or TimeStamp)
+ - one concrete `Stamp` model can back any number of Approval Types
+ - an `Approval` provides the business and presentation logic for a `Stamp` instance.
 """
+
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Callable, Optional, Union
@@ -68,7 +69,7 @@ class DefaultApprovalBusinessLogic:
     revoke_perm: opt_str = ""  # e.g. 'approvals.delete_stamp'
     revoke_method: Callable = revoke_approval  # revoke approval algorithm
 
-    def __init__(self, revoke_perm=None, revoke_method: Callable=None):
+    def __init__(self, revoke_perm=None, revoke_method: Callable = None):
         """Override default actions, or leave parameter None to use class default"""
         self.revoke_perm = revoke_perm if revoke_perm is not None else self.revoke_perm
         self.revoke_method = (
@@ -255,7 +256,9 @@ class AbstractApproval:
 
     # Define visual representation for approvals of this Type. Label is a rendering detail, but common override.
     label: str = ""  # Label for the Approval empty string for no label
-    render: Callable | ApprovalRenderer = ApprovalRenderer()  # presentation logic service
+    render: Callable | ApprovalRenderer = (
+        ApprovalRenderer()
+    )  # presentation logic service
     urls: ApprovalUrlsManager = ApprovalUrlsManager()  # service to provide endpoints
 
     # Registration for Approval Types (aka subclass factory)
@@ -395,7 +398,7 @@ class AbstractApproval:
     def get_posted_signoff(self, data: dict, user) -> AbstractSignoff | None:
         """Get the signoff that matches the `signoff_id` in data iff it's one of the next signoffs"""
         if next_signoffs := self.next_signoffs(for_user=user):
-            if signoffs := [s for s in next_signoffs if s.id == data.get('signoff_id')]:
+            if signoffs := [s for s in next_signoffs if s.id == data.get("signoff_id")]:
                 return signoffs[0]
         return None
 

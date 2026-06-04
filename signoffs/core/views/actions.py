@@ -22,6 +22,7 @@ The protocols, default implementations, and actions provided here are sufficient
 They are not intended to be exhaustive - consider them as a skeleton to demonstrate how a signoff request might
 typically be handled.
 """
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -340,15 +341,15 @@ class SignoffFieldUserActions(BasicUserSignoffActions):
     """
 
     def __init__(
-            self,
-            user: User,
-            subject: models.Model,
-            data: dict,
-            signet_accessor: str = None,
-            form_handler: SignoffRequestFormHandler = None,
-            validator: SignoffValidator = None,
-            committer: SignoffCommitter = None,
-            **kwargs,
+        self,
+        user: User,
+        subject: models.Model,
+        data: dict,
+        signet_accessor: str = None,
+        form_handler: SignoffRequestFormHandler = None,
+        validator: SignoffValidator = None,
+        committer: SignoffCommitter = None,
+        **kwargs,
     ):
         """
         Define actions available to the given user based on request data
@@ -359,17 +360,25 @@ class SignoffFieldUserActions(BasicUserSignoffActions):
         :param signet_accessor: an accessor string for field name of the signet, if disambiguation is required.
         other params - see `BasicUserSignoffActions.__init__`
         """
-        super().__init__(user=user, data=data,
-                         form_handler=form_handler, validator=validator, committer=committer, **kwargs)
+        super().__init__(
+            user=user,
+            data=data,
+            form_handler=form_handler,
+            validator=validator,
+            committer=committer,
+            **kwargs,
+        )
         self.subject = subject
-        self.signet_field = Accessor(signet_accessor).get_field(subject) if signet_accessor else None
+        self.signet_field = (
+            Accessor(signet_accessor).get_field(subject) if signet_accessor else None
+        )
         self._signet_fields = [
-            fld for fld in self.subject._meta.get_fields() if hasattr(fld, 'signoff_id')
+            fld for fld in self.subject._meta.get_fields() if hasattr(fld, "signoff_id")
         ]
         self._validate_signet_field()
 
     def _validate_signet_field(self) -> None:
-        """Raises ImproperlyConfigured if the subject model does not have a SignoffField """
+        """Raises ImproperlyConfigured if the subject model does not have a SignoffField"""
         if not isinstance(self.subject, models.Model) or not bool(self._signet_fields):
             raise ImproperlyConfigured(
                 f'Model instance "{self.subject}" must define a related SignoffField.'
@@ -378,17 +387,27 @@ class SignoffFieldUserActions(BasicUserSignoffActions):
             raise ImproperlyConfigured(
                 f'Field "{self.signet_field}" on Model instance "{self.subject}" must be a SignoffField.'
             )
-        all_signoff_fields = [fld.signoff_id for fld in self.subject._meta.get_fields() if hasattr(fld, 'signoff_id')]
-        if not self.signet_field and not len(all_signoff_fields) == len(set(all_signoff_fields)):
+        all_signoff_fields = [
+            fld.signoff_id
+            for fld in self.subject._meta.get_fields()
+            if hasattr(fld, "signoff_id")
+        ]
+        if not self.signet_field and not len(all_signoff_fields) == len(
+            set(all_signoff_fields)
+        ):
             raise ImproperlyConfigured(
                 f'Model instance "{self.subject}" defines multiple SignoffField with same signoff id.'
-                f'Supply signet_accessor to Action class to disambiguate.'
+                f"Supply signet_accessor to Action class to disambiguate."
             )
 
     def _get_signet_field(self, signoff_id: str) -> Field | None:
-        """ Return the subject model SignoffField corresponding to signoff_id """
+        """Return the subject model SignoffField corresponding to signoff_id"""
         if self.signet_field:
-            return self.signet_field if self.signet_field.signoff_id == signoff_id else None
+            return (
+                self.signet_field
+                if self.signet_field.signoff_id == signoff_id
+                else None
+            )
         lut = {fld.signoff_id: fld for fld in self._signet_fields}
         return lut.get(signoff_id, None)
 
@@ -489,7 +508,9 @@ class ApprovalRequestActions(Protocol):
         ...
 
 
-def verify_consistent_stamp_id(approval: AbstractApproval, signoff: AbstractSignoff=None, request_stamp_id=None):
+def verify_consistent_stamp_id(
+    approval: AbstractApproval, signoff: AbstractSignoff = None, request_stamp_id=None
+):
     """
     Return True iff data relations for approval, signoff, and request are self-consistent
 
@@ -710,7 +731,10 @@ class ApprovalProcessSignoffValidator(ApprovalSignoffValidator):
 
 
 def verify_consistent_process_stamp_id(
-    approval_process: ApprovalsProcess, approval: AbstractApproval, signoff: AbstractSignoff=None, request_stamp_id=None
+    approval_process: ApprovalsProcess,
+    approval: AbstractApproval,
+    signoff: AbstractSignoff = None,
+    request_stamp_id=None,
 ) -> bool:
     """
     Return True iff data relations for approval process, signoff, and request are self-consistent
@@ -723,7 +747,10 @@ def verify_consistent_process_stamp_id(
 
 
 def get_verify_process_stamp(
-    approval_process: ApprovalsProcess, approval: AbstractApproval, kwargs: dict, stamp_id_key="stamp_id"
+    approval_process: ApprovalsProcess,
+    approval: AbstractApproval,
+    kwargs: dict,
+    stamp_id_key="stamp_id",
 ):
     """Helper to return a `verify_stamp` function with correct signature for use with `ApprovalSignoffValidator`"""
     return partial(

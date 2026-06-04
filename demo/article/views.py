@@ -1,6 +1,7 @@
 """
 Article CRUD, Comment, Publication, and utility Views
 """
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import HttpResponseRedirect, get_object_or_404, redirect, render
@@ -33,6 +34,7 @@ def new_article_view(request):
         form = ArticleForm()
     context = {"form": form, "article": Article()}
     return render(request, "article/new_article.html", context=context)
+
 
 @login_required
 def edit_article_view(request, article_id):

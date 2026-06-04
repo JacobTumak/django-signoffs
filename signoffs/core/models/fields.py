@@ -1,6 +1,7 @@
 """
-    Custom model fields and relation descriptors
+Custom model fields and relation descriptors
 """
+
 from __future__ import annotations
 
 from functools import cached_property
@@ -41,7 +42,9 @@ class RelatedSignoffDescriptor:
         """Grab the field named used by owning class to refer to this descriptor"""
         self.accessor_attr = name
 
-    def _validate_related_model(self, signet_field, signoff_type: str | AbstractSignoff):
+    def _validate_related_model(
+        self, signet_field, signoff_type: str | AbstractSignoff
+    ):
         """Raises ImproperlyConfigured if the signet_field model relation is not same as the signoff_type Signet model"""
         signoff_type = registry.get_signoff_type(signoff_type)
         signet_model = signoff_type.get_signetModel()
@@ -83,19 +86,24 @@ class RelatedSignoffDescriptor:
 
 
 class SignoffOneToOneField(models.OneToOneField):
-    """ A normal OneToOneField with a signoff id so its type can be determined before it is assigned a value """
+    """A normal OneToOneField with a signoff id so its type can be determined before it is assigned a value"""
+
     def __init__(self, *args, signoff_id, **kwargs):
         super().__init__(*args, **kwargs)
         self.signoff_id = signoff_id
 
     def deconstruct(self):
         name, path, args, kwargs = super().deconstruct()
-        kwargs['signoff_id'] = self.signoff_id
+        kwargs["signoff_id"] = self.signoff_id
         return name, path, args, kwargs
 
 
 def SignoffField(
-    signoff_type: str | type[AbstractSignoff], on_delete=models.SET_NULL, null=True, related_name="+", **kwargs
+    signoff_type: str | type[AbstractSignoff],
+    on_delete=models.SET_NULL,
+    null=True,
+    related_name="+",
+    **kwargs,
 ):
     """
     Convenience method for constructing from minimal inputs:
@@ -363,7 +371,11 @@ class RelatedApprovalDescriptor:
 
 
 def ApprovalField(
-    approval_type: str | type[AbstractApproval], on_delete=models.SET_NULL, null=True, related_name="+", **kwargs
+    approval_type: str | type[AbstractApproval],
+    on_delete=models.SET_NULL,
+    null=True,
+    related_name="+",
+    **kwargs,
 ):
     """
     Convenience method for constructing from minimal inputs:
@@ -371,12 +383,12 @@ def ApprovalField(
         (2) an RelatedApprovalDescriptor(approval_type)
     approval_type may be an Approval Type or a registered(!) approval id.
     Default parameter rationale:
-        null=True, on_delete=SET_NULL make sensible defaults, as a deleting an approval Stamp
+        null=True, on_delete=SET_NULL make sensible defaults, as deleting an approval Stamp
             should not cascade to its "owner" and the stamp is simply re-created on next access;
             think twice before using other values!
         related_name defines "reverse relation" from Stamp to the approval subject (object declaring the ApprovalField)
             this is not used internally, but could be very useful e.g., when approval permissions need context of subject
-            Wanrning: the name of this field needs to be unquie for each ApprovalField
+            Warning: the name of this field needs to be unique for each ApprovalField
 
     In the example::
 

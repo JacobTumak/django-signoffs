@@ -1,6 +1,7 @@
 """
 App-dependent tests for signoff template tags
 """
+
 from django.template import Context, Template
 from django.test import TestCase
 
@@ -141,7 +142,7 @@ class RenderSignoffTagTests(TestCase):
             ),
             signoff=signoff,
         )
-        self.assertEqual(out.strip(), f"Signoff { signoff.id } Form")
+        self.assertEqual(out.strip(), f"Signoff {signoff.id} Form")
 
     def test_can_revoke_false(self):
         signoff = self.signed_signoff()

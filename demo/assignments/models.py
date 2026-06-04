@@ -15,9 +15,15 @@ class Assignment(models.Model):
         ("completed", "Completed"),
     )
     assignment_name = models.CharField(max_length=200)
-    assigned_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name="created_assignment")
-    assigned_to = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name="received_assignment")
-    status = models.CharField(max_length=15, null=False, default=STATUS_OPTS[0][0], choices=STATUS_OPTS)
+    assigned_by = models.ForeignKey(
+        User, on_delete=models.CASCADE, null=True, related_name="created_assignment"
+    )
+    assigned_to = models.ForeignKey(
+        User, on_delete=models.CASCADE, null=True, related_name="received_assignment"
+    )
+    status = models.CharField(
+        max_length=15, null=False, default=STATUS_OPTS[0][0], choices=STATUS_OPTS
+    )
     details = models.TextField(max_length=1000)
     approval, approval_stamp = ApprovalField(NewAssignmentApproval)
 
@@ -37,10 +43,14 @@ class Assignment(models.Model):
 
     def bump_status(self, commit=True, decrease: bool = False):
         direction = -1 if decrease else 1  # [-1, 1][increase]  # 1 if increase else - 1
-        current_index = self.STATUS_OPTS.index([status for status in self.STATUS_OPTS if status[0] == self.status][0])
+        current_index = self.STATUS_OPTS.index(
+            [status for status in self.STATUS_OPTS if status[0] == self.status][0]
+        )
         num_opts = len(self.STATUS_OPTS)
         if num_opts - 1 == current_index and not decrease:
-            self.status = self.STATUS_OPTS[num_opts - 1][0]  # Don't go past the last index
+            self.status = self.STATUS_OPTS[num_opts - 1][
+                0
+            ]  # Don't go past the last index
         else:
             self.status = self.STATUS_OPTS[current_index + direction][0]
         if commit:
@@ -51,5 +61,3 @@ class Assignment(models.Model):
         self.approval_stamp = None
         self.status = self.STATUS_OPTS[0][0]
         self.save()
-
-

@@ -1,6 +1,7 @@
 """
-    Signoff sequence ordering automation, based on pattern matching Signoff instances to expected Types.
+Signoff sequence ordering automation, based on pattern matching Signoff instances to expected Types.
 """
+
 from typing import Protocol
 
 from django.core.exceptions import ImproperlyConfigured
@@ -18,7 +19,8 @@ def validate_signing_order_pattern(pattern: pm.SigningOrderPattern):
         )
     # The following constraint is not needed in theory, but is a practical and performance reality
     if not all(
-        a.get_signetModel() == b.get_signetModel() for a, b in zip(terms, terms[1:], strict=False)
+        a.get_signetModel() == b.get_signetModel()
+        for a, b in zip(terms, terms[1:], strict=False)
     ):
         raise ImproperlyConfigured(
             "SigningOrder: all pattern Signoff Types must share the same Signet model."

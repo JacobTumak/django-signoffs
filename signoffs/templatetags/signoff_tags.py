@@ -1,6 +1,7 @@
 """
-    Simplify rendering signoff objects in templates
+Simplify rendering signoff objects in templates
 """
+
 from django import template
 
 register = template.Library()

@@ -72,11 +72,13 @@ class SignoffRelationTests(TestCase):
             self.assertTrue(lr.employee_signoff.is_signed())
 
     def test_signofffield_revoked(self):
-        """ Not sure what the use-case for this is, but it should do something sensible """
+        """Not sure what the use-case for this is, but it should do something sensible"""
+
         def get_leave_request():
-            return LeaveRequest.objects.select_related("revokable_signet__revoked", ).get(
-                pk=self.lr.pk
-            )
+            return LeaveRequest.objects.select_related(
+                "revokable_signet__revoked",
+            ).get(pk=self.lr.pk)
+
         with self.assertNumQueries(1):
             lr = get_leave_request()
             self.assertTrue(lr.revokable_signoff.is_signed())
@@ -87,7 +89,11 @@ class SignoffRelationTests(TestCase):
         self.assertFalse(lr.revokable_signoff.is_signed())
         self.assertIsNone(lr.revokable_signet)
         with self.assertNumQueries(1):
-            revoked = lr.revokable_signoff.get_revoked_signets_queryset().select_related('revoked__user')
+            revoked = (
+                lr.revokable_signoff.get_revoked_signets_queryset().select_related(
+                    "revoked__user"
+                )
+            )
             self.assertEqual(len(revoked), 1)
             self.assertTrue(all(s.revoked.user == self.u1 for s in revoked))
 

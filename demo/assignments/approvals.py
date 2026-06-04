@@ -9,7 +9,9 @@ from signoffs.signoffs import SignoffRenderer, SignoffUrlsManager
 
 @register("assignments.approvals.NewAssignmentApproval")
 class NewAssignmentApproval(SimpleApproval):
-    render = ApprovalRenderer(approval_template="assignments/htmx_signoffs/approval.html")
+    render = ApprovalRenderer(
+        approval_template="assignments/htmx_signoffs/approval.html"
+    )
     label = "Signoff for New Assignment"
 
     S = ApprovalSignoff
@@ -21,7 +23,6 @@ class NewAssignmentApproval(SimpleApproval):
         save_url_name="assignment:sign-signoff",
         revoke_url_name="assignment:revoke-signoff",
     )
-
 
     assign_project_signoff = S.register(
         id="assign_project_signoff",
@@ -59,17 +60,24 @@ class NewAssignmentApproval(SimpleApproval):
         if not for_user:
             return super().next_signoffs()
         if type(for_user) not in (User, SimpleLazyObject):
-            raise TypeError(f"var \"for_user\" must be User instance, instead got {type(for_user)}\n")
+            raise TypeError(
+                f'var "for_user" must be User instance, instead got {type(for_user)}\n'
+            )
         if not self.subject:
-
             raise ValueError(
                 f"No Assignment found as subject in {self.id}. Must have subject to check sequential sign perm."
             )
         assignment = self.subject
         if (
-                (for_user == assignment.assigned_by and assignment.status in ['draft', 'pending_review'])
-                or (for_user == assignment.assigned_to and assignment.status in ['requested', 'in_progress'])
-                or for_user.is_superuser  # FIXME: overwritten for simpler ui testing
+            (
+                for_user == assignment.assigned_by
+                and assignment.status in ["draft", "pending_review"]
+            )
+            or (
+                for_user == assignment.assigned_to
+                and assignment.status in ["requested", "in_progress"]
+            )
+            or for_user.is_superuser  # FIXME: overwritten for simpler ui testing
         ):
             return super().next_signoffs(for_user=for_user)
         else:

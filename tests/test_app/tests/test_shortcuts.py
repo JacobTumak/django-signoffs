@@ -1,6 +1,7 @@
 """
 Test App - tests for shortcuts
 """
+
 from django.test import TestCase
 
 from signoffs import shortcuts

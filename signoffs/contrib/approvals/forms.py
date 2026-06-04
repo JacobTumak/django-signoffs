@@ -1,6 +1,7 @@
 """
 A form for collecting approval signoffs
 """
+
 from django import forms
 
 from signoffs.core.forms import AbstractSignoffForm

@@ -1,6 +1,7 @@
 """
 App-independent UNIT tests for underlying approval process support classes - no app logic
 """
+
 import django_fsm as fsm
 from django.db import models
 from django.test import TestCase

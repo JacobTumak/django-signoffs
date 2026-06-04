@@ -1,6 +1,7 @@
 """
-    Custom object and query managers.
+Custom object and query managers.
 """
+
 from signoffs import registry
 
 

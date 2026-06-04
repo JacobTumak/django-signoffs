@@ -1,6 +1,7 @@
 """
 App-independent tests for signoff forms - no app logic
 """
+
 from django.test import SimpleTestCase, TestCase
 
 from signoffs.forms import AbstractSignoffForm, signoff_form_factory

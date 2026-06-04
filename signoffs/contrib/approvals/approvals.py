@@ -1,5 +1,5 @@
 """
-    Some basic Approval Types backed by the Stamp model defined in this package.
+Some basic Approval Types backed by the Stamp model defined in this package.
 """
 
 from __future__ import annotations

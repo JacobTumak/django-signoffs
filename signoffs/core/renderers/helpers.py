@@ -1,4 +1,4 @@
-""" Helpers: resolve 3 potential sources for context: defaults, context object, kwargs """
+"""Helpers: resolve 3 potential sources for context: defaults, context object, kwargs"""
 
 
 # Helper methods:

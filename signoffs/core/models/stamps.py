@@ -12,6 +12,7 @@ Once granted, the Stamp persists its "approved" status, regardless of the state 
 To revoke a Stamp, we alter the approval status and revoke the Signet(s) used to grant the Approval.
 A "blame" history, may be maintained by using a RevokeSignet model on the Approval Type.
 """
+
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
