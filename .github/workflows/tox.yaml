@@ -1,4 +1,4 @@
-ame: Test with tox
+name: Test with tox
 
 on:
   push:
